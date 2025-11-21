@@ -1,0 +1,5 @@
+{
+  "name": "CricGenie Manager",
+  "description": "A comprehensive AI-powered cricket team management and match scoring application. Features real-time scoring, team management, and AI-driven commentary and coaching advice.",
+  "requestFramePermissions": []
+}

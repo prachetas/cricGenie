@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install build dependencies required for sqlite3 on ARM/Alpine
+# This is critical for Raspberry Pi deployment
+RUN apk add --no-cache python3 make g++
+
+# Copy package.json from the server directory
+COPY server/package.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the server source code
+COPY server/index.js ./
+
+# Ensure data directory exists
+RUN mkdir -p data
+
+EXPOSE 3001
+
+CMD ["npm", "start"]

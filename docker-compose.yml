@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - cricket_data:/app/data
+    restart: always
+
+  cricgenie:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - API_KEY=${API_KEY}
+    ports:
+      - "3000:3000"
+    environment:
+      - API_KEY=${API_KEY}
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  cricket_data:

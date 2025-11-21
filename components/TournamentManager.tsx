@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Tournament, Team, Match, MatchStatus } from '../types';
-import { Trophy, Plus, Calendar, Users, ArrowRight, Table as TableIcon, BarChart3, ChevronDown } from 'lucide-react';
+import { Trophy, Calendar, Users, ArrowRight, BarChart3, ChevronDown, ArrowLeft } from 'lucide-react';
 
 interface TournamentManagerProps {
   tournaments: Tournament[];
@@ -10,10 +9,11 @@ interface TournamentManagerProps {
   matches: Match[];
   setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
   onStartMatch: (matchId: string) => void;
+  onBack?: () => void;
 }
 
 export const TournamentManager: React.FC<TournamentManagerProps> = ({ 
-    tournaments, teams, setTournaments, matches, setMatches, onStartMatch 
+    tournaments, teams, setTournaments, matches, setMatches, onStartMatch, onBack 
 }) => {
   const [view, setView] = useState<'LIST' | 'DETAILS'>('LIST');
   const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
@@ -175,9 +175,16 @@ export const TournamentManager: React.FC<TournamentManagerProps> = ({
   if (view === 'LIST' || !selectedTournament) {
       return (
           <div className="p-6 max-w-6xl mx-auto">
-              <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center gap-2">
-                  <Trophy className="w-6 h-6 text-emerald-600" /> Tournaments
-              </h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <Trophy className="w-6 h-6 text-emerald-600" /> Tournaments
+                </h2>
+                {onBack && (
+                    <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm font-medium">
+                        <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+                    </button>
+                )}
+              </div>
 
               <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
                   <h3 className="font-semibold text-slate-700 mb-4">Create Tournament</h3>
@@ -502,10 +509,10 @@ export const TournamentManager: React.FC<TournamentManagerProps> = ({
                                                 <div className="text-center">
                                                     <div className="text-xs text-slate-400">{match.venue}</div>
                                                     {match.status !== MatchStatus.COMPLETED && (
-                                                        <div className={`text-xs font-bold ${match.status === 'Live' ? 'text-red-500' : 'text-slate-500'}`}>{match.status}</div>
+                                                        <div className={`text-xs font-bold ${match.status === MatchStatus.LIVE ? 'text-red-500' : 'text-slate-500'}`}>{match.status}</div>
                                                     )}
                                                 </div>
-                                                {match.status !== 'Completed' ? (
+                                                {match.status !== MatchStatus.COMPLETED ? (
                                                     <button 
                                                         onClick={() => onStartMatch(match.id)}
                                                         className="bg-indigo-50 text-indigo-600 p-2 rounded-full hover:bg-indigo-100"
@@ -616,5 +623,6 @@ export const TournamentManager: React.FC<TournamentManagerProps> = ({
                   )}
               </div>
           </div>
-      );
-  };
+      </div>
+  );
+};
